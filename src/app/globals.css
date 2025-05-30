@@ -112,11 +112,19 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@font-face {
+  font-family: 'BlinkMacSystemFont';
+  src: url('/fonts/BlinkMac/SF-Pro-Text-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+     font-family: 'BlinkMacSystemFont', -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
 }
