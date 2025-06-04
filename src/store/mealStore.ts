@@ -1,5 +1,7 @@
 import { create } from "zustand"
 import { nanoid } from "nanoid"
+import { calculateNutrition } from "@/utils/calculateNutrition"
+
 
 //Tipos
 export interface Nutrition {
@@ -59,7 +61,7 @@ interface MealState {
 }
 
 //Função de cálculo de nutrição (exemplo stub)
-function calculateNutrition(
+{/*function calculateNutrition(
   foods: FoodItem[],
   supplements: FoodItem[]
 ): Nutrition {
@@ -71,7 +73,7 @@ function calculateNutrition(
     calories: 0,
     micronutrients: [],
   }
-}
+} */}
 
 //Criação do store
 export const useMealStore = create<MealState>((set, get) => ({
@@ -126,29 +128,27 @@ export const useMealStore = create<MealState>((set, get) => ({
       current: { ...s.current, observation },
     })),
 
-  saveMeal: () => {
-    const { meals, current } = get()
-    const nutrition = calculateNutrition(
-      current.foods,
-      current.supplements
-    )
+saveMeal: () => {
+  const { meals, current } = get()
 
-    const newMeal: MealItem = {
-      id: nanoid(),
-      time: current.time,
-      title: current.title,
-      foods: current.foods,
-      supplements: current.supplements,
-      observation: current.observation,
-      createdAt: new Date(),
-      nutrition,
-    }
+  const nutrition = calculateNutrition(current.foods, current.supplements)
 
-    set({
-      meals: [...meals, newMeal],
-      current: { time: "", title: "", foods: [], supplements: [], observation: "" },
-    })
-  },
+  const newMeal: MealItem = {
+    id: nanoid(),
+    time: current.time,
+    title: current.title,
+    foods: current.foods,
+    supplements: current.supplements,
+    observation: current.observation,
+    createdAt: new Date(),
+    nutrition,
+  }
+
+  set({
+    meals: [...meals, newMeal],
+    current: { time: "", title: "", foods: [], supplements: [], observation: "" },
+  })
+},
 
   reset: () => set({ meals: [] }),
 }))
