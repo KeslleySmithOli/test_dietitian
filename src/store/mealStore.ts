@@ -2,8 +2,7 @@ import { create } from "zustand"
 import { nanoid } from "nanoid"
 import { calculateNutrition } from "@/utils/calculateNutrition"
 
-
-//Tipos
+// Tipos
 export interface Nutrition {
   carbs: number
   protein: number
@@ -36,9 +35,7 @@ export interface MealItem {
 }
 
 interface MealState {
-  //lista de refeiçoes salvas
   meals: MealItem[]
-  //estado interino do formulário
   current: {
     time: string
     title: string
@@ -46,7 +43,6 @@ interface MealState {
     supplements: FoodItem[]
     observation: string
   }
-  // ações para manipular o formulário
   setTime: (time: string) => void
   setTitle: (title: string) => void
   addFood: (name: string, qty: string) => void
@@ -54,37 +50,24 @@ interface MealState {
   addSupplement: (name: string, qty: string) => void
   removeSupplement: (id: string) => void
   setObservation: (obs: string) => void
-  // ação para salvar e limpar o formulário
   saveMeal: () => void
-  // ação extra para resetar toda a lista
   reset: () => void
+
+  //Novos campos:
+  isSaved: boolean
+  setIsSaved: (val: boolean) => void
 }
 
-//Função de cálculo de nutrição (exemplo stub)
-{/*function calculateNutrition(
-  foods: FoodItem[],
-  supplements: FoodItem[]
-): Nutrition {
-  return {
-    carbs: 0,
-    protein: 0,
-    fat: 0,
-    fiber: 0,
-    calories: 0,
-    micronutrients: [],
-  }
-} */}
-
-//Criação do store
+// Criação do store
 export const useMealStore = create<MealState>((set, get) => ({
   meals: [],
   current: { time: "", title: "", foods: [], supplements: [], observation: "" },
+  isSaved: false,
 
-  setTime: (time) =>
-    set((s) => ({ current: { ...s.current, time } })),
+  setIsSaved: (val) => set({ isSaved: val }),
 
-  setTitle: (title) =>
-    set((s) => ({ current: { ...s.current, title } })),
+  setTime: (time) => set((s) => ({ current: { ...s.current, time } })),
+  setTitle: (title) => set((s) => ({ current: { ...s.current, title } })),
 
   addFood: (name, qty) =>
     set((s) => ({
@@ -106,10 +89,7 @@ export const useMealStore = create<MealState>((set, get) => ({
     set((s) => ({
       current: {
         ...s.current,
-        supplements: [
-          ...s.current.supplements,
-          { id: nanoid(), name, qty },
-        ],
+        supplements: [...s.current.supplements, { id: nanoid(), name, qty }],
       },
     })),
 
@@ -117,9 +97,7 @@ export const useMealStore = create<MealState>((set, get) => ({
     set((s) => ({
       current: {
         ...s.current,
-        supplements: s.current.supplements.filter(
-          (f) => f.id !== id
-        ),
+        supplements: s.current.supplements.filter((f) => f.id !== id),
       },
     })),
 
@@ -128,27 +106,28 @@ export const useMealStore = create<MealState>((set, get) => ({
       current: { ...s.current, observation },
     })),
 
-saveMeal: () => {
-  const { meals, current } = get()
+  saveMeal: () => {
+    const { meals, current } = get()
 
-  const nutrition = calculateNutrition(current.foods, current.supplements)
+    const nutrition = calculateNutrition(current.foods, current.supplements)
 
-  const newMeal: MealItem = {
-    id: nanoid(),
-    time: current.time,
-    title: current.title,
-    foods: current.foods,
-    supplements: current.supplements,
-    observation: current.observation,
-    createdAt: new Date(),
-    nutrition,
-  }
+    const newMeal: MealItem = {
+      id: nanoid(),
+      time: current.time,
+      title: current.title,
+      foods: current.foods,
+      supplements: current.supplements,
+      observation: current.observation,
+      createdAt: new Date(),
+      nutrition,
+    }
 
-  set({
-    meals: [...meals, newMeal],
-    current: { time: "", title: "", foods: [], supplements: [], observation: "" },
-  })
-},
+    set({
+      meals: [...meals, newMeal],
+      current: { time: "", title: "", foods: [], supplements: [], observation: "" },
+      isSaved: true, // <- marca como salvo
+    })
+  },
 
-  reset: () => set({ meals: [] }),
+  reset: () => set({ meals: [], isSaved: false }),
 }))

@@ -1,7 +1,7 @@
 'use client'
 
 import { useMealStore } from '@/store/mealStore'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
@@ -77,7 +77,7 @@ export function MealForm() {
     saveMeal,
   } = useMealStore()
 
-  const [isSaved, setIsSaved] = useState(false)
+  const isSaved = useMealStore((s) => s.isSaved)
   const [foodName, setFoodName] = useState('')
   const [foodQty, setFoodQty] = useState('')
   const [supplementName, setSupplementName] = useState('')
@@ -101,44 +101,51 @@ export function MealForm() {
       <div className="flex flex-col">
         <h1 className="text-[28px] font-bold mb-8 text-[#414552] font-system">Adicionar Refeição</h1>
 
-        {!isSaved ? (
-          <div className="flex gap-1 mb-6">
-            <div className="flex flex-col gap-1">
-              <label className="text-sm text-[#414552] font-medium font-system">Horário</label>
+        <div className="flex gap-6 mb-6">
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-[#414552] font-medium font-system">Horário</label>
+            {isSaved ? (
+              <span className="text-[24px] font-bold leading-none font-system text-[#414552]">
+                {lastMeal?.time || '-'}
+              </span>
+            ) : (
               <input
                 value={current.time}
                 onChange={(e) => setTime(e.target.value)}
                 type="text"
                 className="border border-[1px] rounded-[5px] px-3 h-[25px] text-sm w-[84px]"
               />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-sm text-[#414552] font-medium font-system">Título</label>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-[#414552] font-medium font-system">Título</label>
+            {isSaved ? (
+              <span className="text-[24px] font-bold leading-none font-system text-[#414552]">
+                {lastMeal?.title || '-'}
+              </span>
+            ) : (
               <input
                 value={current.title}
                 onChange={(e) => setTitle(e.target.value)}
                 type="text"
                 className="border border-[1px] rounded-[5px] px-3 h-[25px] text-sm w-[143px]"
               />
-            </div>
+            )}
           </div>
-        ) : (
-          <div className="mb-6">
-            <div className="flex gap-2 items-center">
-              <span className="text-lg font-bold text-[#414552]">{lastMeal?.time || '-'}</span>
-              <span className="text-lg font-bold text-[#414552]">{lastMeal?.title || ''}</span>
-            </div>
-            <p className="text-[#9F9F9F] text-sm font-system">
-              Criado dia {new Date(lastMeal?.createdAt || new Date()).toLocaleDateString("pt-BR")} no plano alimentar do Ryan Levy
-            </p>
-          </div>
-        )}
+        </div>
 
-        <div className="h-[1px] w-[5px] bg-[#B1B1B1] my-4 mb-8" />
+        {isSaved ? (
+          <p className="text-[#9F9F9F] text-sm font-system -mt-4 mb-8">
+            Criado dia {new Date(lastMeal?.createdAt || new Date()).toLocaleDateString("pt-BR")} no plano alimentar do Ryan Levy
+          </p>
+        ) : (
+          <div className="h-[1px] w-[5px] bg-[#B1B1B1] my-4 mb-8" />
+        )}
 
         {/* ALIMENTOS */}
         <div className="mb-6">
-          <h2 className="text-base text-[#675DFF] font-bold mb-2 font-system">Alimentos</h2>
+          <h2 className="text-base text-[#675DFF] font-semibold mb-2">Alimentos</h2>
 
           {!isSaved && (
             <div className="flex gap-3 mb-3">
@@ -193,7 +200,7 @@ export function MealForm() {
 
         {/* SUPLEMENTOS */}
         <div className="mb-6">
-          <h2 className="text-base text-[#675DFF] font-bold mb-2 font-system">Suplemento</h2>
+          <h2 className="text-base text-[#675DFF] font-semibold mb-2">Suplemento</h2>
 
           {!isSaved && (
             <div className="flex gap-3 mb-3">
@@ -248,7 +255,7 @@ export function MealForm() {
 
         {/* OBSERVAÇÃO */}
         <div>
-          <h2 className="text-base text-[#675DFF] font-bold mb-2 font-system">Observação</h2>
+          <h2 className="text-base text-[#675DFF] font-semibold mb-2">Observação</h2>
           {!isSaved ? (
             <textarea
               value={current.observation}
@@ -260,7 +267,7 @@ export function MealForm() {
           )}
         </div>
 
-        {/* BOTÃO FINAL */}
+        {/* BOTÃO FINAL 
         {!isSaved && (
           <button
             onClick={() => {
@@ -272,7 +279,9 @@ export function MealForm() {
             Salvar Alimento
           </button>
         )}
+          */}
       </div>
+
     </DndProvider>
   )
 }

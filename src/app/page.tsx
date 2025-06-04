@@ -5,9 +5,10 @@ import { NutritionPanel } from "@/components/NutritionPanel"
 import { Button } from "@/components/ui/button"
 import { MealForm } from "@/components/MealForm"
 import { TopRightMenu } from "@/components/TopRightMenu"
-
+import { useState } from 'react'
 
 export default function Home() {
+  const [isSaved, setIsSaved] = useState(false)
   return (
     <div className="flex min-h-screen">
       <Sidebar />
@@ -28,7 +29,7 @@ export default function Home() {
             <MealForm />
           </div>
           <div className="flex flex-col items-end mr-50">
-            <NutritionPanel />
+            <NutritionPanel onReset={() => setIsSaved(false)} />
           </div>
         </div>
       </main>

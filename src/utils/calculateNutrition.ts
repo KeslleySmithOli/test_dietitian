@@ -35,6 +35,11 @@ export function calculateNutrition(
     fat: +total.fat.toFixed(1),
     fiber: +total.fiber.toFixed(1),
     calories: +total.calories.toFixed(1),
-    micronutrients: [] // se quiser adicionar depois
+    micronutrients: [{
+       name: "Potássio",
+    amount: 580,
+    unit: "mg",
+    cdrPct: (580 / 3500) * 100, // ~16.5%
+  }] 
   }
 }
