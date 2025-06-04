@@ -44,14 +44,14 @@ export function NutritionPanel({ onReset }: { onReset: () => void }) {
         ],
     }
 
-   const handleSave = () => {
-    useMealStore.getState().saveMeal()
-    onReset() // opcional: notifica que foi salvo
-  }
+    const handleSave = () => {
+        useMealStore.getState().saveMeal()
+        onReset() // opcional: notifica que foi salvo
+    }
 
     const handleCancel = () => {
-    reset()
-    onReset() // avisa o MealForm que deve "des-salvar"
+        reset()
+        onReset() // avisa o MealForm que deve "des-salvar"
     }
 
     return (
@@ -123,14 +123,14 @@ export function NutritionPanel({ onReset }: { onReset: () => void }) {
 
             {/* Texto + Botões abaixo do painel  */}
             <div className="mt-2 flex flex-col items-end w-[833px]">
-                <p className ="mb-8 text-sm text-[#C6C6C6] font-medium font-system">
+                <p className="mb-8 text-sm text-[#C6C6C6] font-medium font-system">
                     CDR Médio: Valores baseados em recomendações da OMS/FAO e Dietary Guidelines para adultos.
                 </p>
 
                 <div className="flex gap-2">
                     <button
-                    onClick={handleCancel}
-                    className="text-sm px-4 py-1.5 text-[#414552] border rounded">Cancelar</button>
+                        onClick={handleCancel}
+                        className="text-sm px-4 py-1.5 text-[#414552] border rounded">Cancelar</button>
                     <button
                         onClick={handleSave}
                         className="text-sm px-6 py-1.5 bg-[#675DFF] hover:bg-[#675DFF] text-white rounded"
